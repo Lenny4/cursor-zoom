@@ -91,17 +91,13 @@ const cursorZoom = function (source, param = null, result = null) {
             result.setAttribute("id", defaultResultSelector);
             document.body.appendChild(result);
         }
-        console.log(result);
     } else if (typeof result === 'string') {
         result = document.querySelector(result);
     }
-    console.log(result);
     if (currentResult instanceof Element || currentResult instanceof HTMLDocument) {
         currentResult.remove();
     }
-    console.log(result);
     currentResult = result;
-    console.log(source, param, result);
     imageZoom(source, param, result);
 };
 
