@@ -1,11 +1,11 @@
 {
-  "name": "empty-js-client-package",
-  "version": "0.0.1",
-  "description": "",
+  "name": "cursor-zoom",
+  "version": "1.0.0",
+  "description": "Simple module to zoom on picture with cursor",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Lenny4/empty-js-client-package"
+    "url": "git://github.com/Lenny4/cursor-zoom"
   },
   "author": "Alexandre Beaujour",
   "license": "MIT",
@@ -13,6 +13,6 @@
     "build": "mkdir -p dist && browserify index.js -s cursorZoom -o dist/cursor-zoom.js"
   },
   "devDependencies": {
-    "browserify": "^16.5.1"
+    "browserify": "^16.5.2"
   }
 }
