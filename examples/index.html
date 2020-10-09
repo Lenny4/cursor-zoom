@@ -6,11 +6,23 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>empty-js-client-package</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<script src="../dist/bundle-name.js"></script>
+<div class="container">
+    <img id="myimage"
+         src="https://cdn.searchenginejournal.com/wp-content/uploads/2019/07/the-essential-guide-to-using-images-legally-online-1520x800.png"
+         width="600" height="400">
+</div>
+<script src="../dist/cursor-zoom.js"></script>
 <script>
-    bundleName();
+    cursorZoom('#myimage');
+    setTimeout(() => {
+        cursorZoom('#myimage');
+    }, 5000)
 </script>
 </body>
 </html>
