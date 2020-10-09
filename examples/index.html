@@ -14,9 +14,16 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-8">
+        <div class="col-7">
             <div class="position-relative">
-                <img id="myimage"
+                <img
+                     src="https://cdn.searchenginejournal.com/wp-content/uploads/2019/07/the-essential-guide-to-using-images-legally-online-1520x800.png"
+                     width="600" height="400" class="img-fluid">
+            </div>
+        </div>
+        <div class="col-7">
+            <div class="position-relative">
+                <img
                      src="https://cdn.searchenginejournal.com/wp-content/uploads/2019/07/the-essential-guide-to-using-images-legally-online-1520x800.png"
                      width="600" height="400" class="img-fluid">
             </div>
@@ -25,10 +32,7 @@
 </div>
 <script src="../dist/cursor-zoom.js"></script>
 <script>
-    cursorZoom('#myimage');
-    setTimeout(() => {
-        cursorZoom('#myimage');
-    }, 5000)
+    cursorZoom('.img-fluid');
 </script>
 </body>
 </html>

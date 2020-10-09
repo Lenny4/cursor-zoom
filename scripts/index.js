@@ -1,7 +1,9 @@
 'use strict';
-const defaultResultSelector = '#cursor-zoom-result';
+const lensSelectorId = 'cursor-zoom-lens';
 let currentResult = null;
 let currentLens = null;
+let isInLens = false;
+let isInImage = false;
 
 // source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_image_zoom
 function imageZoom(img, param, result) {
@@ -17,6 +19,7 @@ function imageZoom(img, param, result) {
     }
     currentResult = result;
     lens = document.createElement("DIV");
+    lens.setAttribute("id", lensSelectorId);
     lens.setAttribute("style", `position: absolute;
             border: 1px solid #d4d4d4;
             width: 40px;
@@ -80,25 +83,60 @@ function imageZoom(img, param, result) {
     }
 }
 
-const cursorZoom = function (source, param = null, result = null) {
-    if (typeof source === 'string') {
-        source = document.querySelector(source);
-    }
-    if (result === null) {
-        result = document.querySelector(defaultResultSelector);
-        if (result === null || typeof result === 'undefined') {
-            result = document.createElement("DIV");
-            result.setAttribute("id", defaultResultSelector);
-            document.body.appendChild(result);
-        }
-    } else if (typeof result === 'string') {
-        result = document.querySelector(result);
-    }
+function removeResultIfNotOnImage() {
     if (currentResult instanceof Element || currentResult instanceof HTMLDocument) {
-        currentResult.remove();
+        setTimeout(() => {
+            if (isInLens === false && isInImage === false) {
+                currentResult.remove();
+                if (currentLens instanceof Element || currentLens instanceof HTMLDocument) {
+                    currentLens.remove();
+                }
+            }
+        }, 1);
     }
-    currentResult = result;
-    imageZoom(source, param, result);
+}
+
+const cursorZoom = function (selector, param = null) {
+    let sources;
+    if (typeof selector === 'string') {
+        sources = document.querySelectorAll(selector);
+    } else {
+        sources = new NodeList();
+        sources[0] = selector;
+    }
+    document.body.addEventListener("mouseenter", function (e) {
+        sources.forEach((source, index) => {
+            if (e.target === source) {
+                isInImage = true;
+                if (currentResult instanceof Element || currentResult instanceof HTMLDocument) {
+                    currentResult.remove();
+                }
+                let result = document.createElement("DIV");
+                document.body.appendChild(result);
+                currentResult = result;
+                imageZoom(source, param, result);
+            }
+        });
+    }, true);
+    document.body.addEventListener("mouseout", function (e) {
+        sources.forEach((source, index) => {
+            if (e.target === source) {
+                isInImage = false;
+                removeResultIfNotOnImage();
+            }
+        });
+    }, true);
+    document.body.addEventListener("mouseenter", function (e) {
+        if (e.target.id === lensSelectorId) {
+            isInLens = true;
+        }
+    }, true);
+    document.body.addEventListener("mouseout", function (e) {
+        if (e.target.id === lensSelectorId) {
+            isInLens = false;
+            removeResultIfNotOnImage();
+        }
+    }, true);
 };
 
 module.exports = cursorZoom;
