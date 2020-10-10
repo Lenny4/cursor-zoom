@@ -9,6 +9,16 @@
   },
   "author": "Alexandre Beaujour",
   "license": "MIT",
+  "keywords": [
+    "cursor",
+    "image",
+    "zoom",
+    "picture",
+    "vanilla",
+    "javascript",
+    "ux",
+    "zoomable"
+  ],
   "scripts": {
     "build": "mkdir -p dist && browserify -t browserify-css index.js -s cursorZoom -o dist/cursor-zoom.js"
   },
