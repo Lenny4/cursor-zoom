@@ -10,9 +10,10 @@
   "author": "Alexandre Beaujour",
   "license": "MIT",
   "scripts": {
-    "build": "mkdir -p dist && browserify index.js -s cursorZoom -o dist/cursor-zoom.js"
+    "build": "mkdir -p dist && browserify -t browserify-css index.js -s cursorZoom -o dist/cursor-zoom.js"
   },
   "devDependencies": {
-    "browserify": "^16.5.2"
+    "browserify": "^16.5.2",
+    "browserify-css": "^0.15.0"
   }
 }

@@ -1,44 +1,50 @@
 'use strict';
+require('../style/style.css');
+
 const lensSelectorId = 'cursor-zoom-lens';
+const resultSelectorId = 'cursor-zoom-result';
 let currentResult = null;
 let currentLens = null;
+let currentSource = null;
 let isInLens = false;
 let isInImage = false;
+let hasRegisterEvents = false;
+const allSources = [];
 
 // source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_image_zoom
-function imageZoom(img, param, result) {
-    let lens, cx, cy;
+function imageZoom() {
+    let cx, cy;
     // à faire dans les params
-    result.setAttribute("style", `border: 1px solid #d4d4d4;
-            /*set the size of the result div:*/
-            width: 300px;
-            height: 300px;width: 500px; height:500px;`);
+    currentResult.setAttribute('id', resultSelectorId);
     /*create lens:*/
     if (currentLens instanceof Element || currentLens instanceof HTMLDocument) {
         currentLens.remove();
     }
-    currentResult = result;
-    lens = document.createElement("DIV");
-    lens.setAttribute("id", lensSelectorId);
-    lens.setAttribute("style", `position: absolute;
-            border: 1px solid #d4d4d4;
-            width: 40px;
-            height: 40px;`);
+    currentLens = document.createElement('DIV');
+    currentLens.setAttribute('id', lensSelectorId);
+    let small = null;
+    (currentSource.source.offsetWidth < currentSource.source.offsetHeight) ? small = currentSource.source.offsetWidth : small = currentSource.source.offsetHeight;
+    small = Math.trunc(small * (currentSource.param.widthLens / 100));
+    currentLens.style.width = small + 'px';
+    currentLens.style.height = small + 'px';
     /*insert lens:*/
-    img.parentElement.insertBefore(lens, img);
-    /*calculate the ratio between result DIV and lens:*/
-    cx = result.offsetWidth / lens.offsetWidth;
-    cy = result.offsetHeight / lens.offsetHeight;
-    /*set background properties for the result DIV:*/
-    result.style.backgroundImage = "url('" + img.src + "')";
-    result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
+    currentSource.source.parentElement.insertBefore(currentLens, currentSource.source);
+    if (currentResult.offsetWidth < 10) {
+        currentResult.style.width = '300px';
+    }
+    currentResult.style.height = currentResult.offsetWidth + 'px';
+    /*calculate the ratio between currentResult DIV and lens:*/
+    cx = currentResult.offsetWidth / currentLens.offsetWidth;
+    cy = currentResult.offsetHeight / currentLens.offsetHeight;
+    /*set background properties for the currentResult DIV:*/
+    currentResult.style.backgroundImage = 'url("' + currentSource.source.src + '")';
+    currentResult.style.backgroundSize = (currentSource.source.width * cx) + 'px ' + (currentSource.source.height * cy) + 'px';
     /*execute a function when someone moves the cursor over the image, or the lens:*/
-    lens.addEventListener("mousemove", moveLens);
-    img.addEventListener("mousemove", moveLens);
+    currentLens.addEventListener('mousemove', moveLens);
+    currentSource.source.addEventListener('mousemove', moveLens);
     /*and also for touch screens:*/
-    lens.addEventListener("touchmove", moveLens);
-    img.addEventListener("touchmove", moveLens);
-    currentLens = lens;
+    currentLens.addEventListener('touchmove', moveLens);
+    currentSource.source.addEventListener('touchmove', moveLens);
 
     function moveLens(e) {
         let pos, x, y;
@@ -47,32 +53,32 @@ function imageZoom(img, param, result) {
         /*get the cursor's x and y positions:*/
         pos = getCursorPos(e);
         /*calculate the position of the lens:*/
-        x = pos.x - (lens.offsetWidth / 2);
-        y = pos.y - (lens.offsetHeight / 2);
+        x = pos.x - (currentLens.offsetWidth / 2);
+        y = pos.y - (currentLens.offsetHeight / 2);
         /*prevent the lens from being positioned outside the image:*/
-        if (x > img.width - lens.offsetWidth) {
-            x = img.width - lens.offsetWidth;
+        if (x > currentSource.source.width - currentLens.offsetWidth) {
+            x = currentSource.source.width - currentLens.offsetWidth;
         }
         if (x < 0) {
             x = 0;
         }
-        if (y > img.height - lens.offsetHeight) {
-            y = img.height - lens.offsetHeight;
+        if (y > currentSource.source.height - currentLens.offsetHeight) {
+            y = currentSource.source.height - currentLens.offsetHeight;
         }
         if (y < 0) {
             y = 0;
         }
         /*set the position of the lens:*/
-        lens.style.left = x + "px";
-        lens.style.top = y + "px";
-        /*display what the lens "sees":*/
-        result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
+        currentLens.style.left = x + 'px';
+        currentLens.style.top = y + 'px';
+        /*display what the lens 'sees':*/
+        currentResult.style.backgroundPosition = '-' + (x * cx) + 'px -' + (y * cy) + 'px';
     }
 
     function getCursorPos(e) {
         let a, x, y;
         /*get the x and y positions of the image:*/
-        a = img.getBoundingClientRect();
+        a = currentSource.source.getBoundingClientRect();
         /*calculate the cursor's x and y coordinates, relative to the image:*/
         x = e.pageX - a.left;
         y = e.pageY - a.top;
@@ -96,47 +102,125 @@ function removeResultIfNotOnImage() {
     }
 }
 
-const cursorZoom = function (selector, param = null) {
+function positionResult() {
+    let position = currentSource.param.position;
+    const offsets = currentSource.source.getBoundingClientRect();
+    const top = offsets.top + window.scrollY;
+    const left = offsets.left;
+    currentResult.setAttribute('class', currentSource.param.classResult);
+    if (currentSource.param.position === 'auto') {
+        const right = window.outerWidth - (left + currentSource.source.offsetWidth);
+        (left + currentSource.source.offsetWidth > right) ? position = 'left' : position = 'right';
+    }
+    if (position === 'right') {
+        currentResult.setAttribute('style', 'left:' + (left + currentSource.source.offsetWidth + currentSource.param.margin) + 'px;top:' + top + 'px');
+    } else if (position === 'left') {
+        currentResult.setAttribute('style', 'left:' + (left - currentResult.offsetWidth - currentSource.param.margin) + 'px;top:' + top + 'px');
+    } else if (position === 'top') {
+        currentResult.setAttribute('style', 'left:' + left + 'px;top:' + (top - currentResult.offsetWidth - currentSource.param.margin) + 'px');
+    } else if (position === 'bottom') {
+        currentResult.setAttribute('style', 'left:' + left + 'px;top:' + (top + currentSource.source.offsetHeight + currentSource.param.margin) + 'px');
+    }
+}
+
+function toNodeList(elements) {
+    let list;
+    for (let elm of elements) {
+        elm.setAttribute('wrapNodeList', '');
+        list = document.querySelectorAll('[wrapNodeList]');
+        elm.removeAttribute('wrapNodeList');
+    }
+    return list;
+}
+
+function init(selector, param) {
+    if (typeof param !== 'object') {
+        param = {};
+    }
+    if (typeof param.position !== 'string') {
+        param.position = 'auto';
+    }
+    if (typeof param.classResult !== 'string') {
+        param.classResult = 'cursor-zoom-result';
+    }
+    if (typeof param.widthLens !== 'number') {
+        param.widthLens = 40;
+    } else if (param.widthLens > 100) {
+        param.widthLens = 100;
+    }
+    if (typeof param.margin !== 'number') {
+        param.margin = 15;
+    }
     let sources;
     if (typeof selector === 'string') {
         sources = document.querySelectorAll(selector);
     } else {
-        sources = new NodeList();
-        sources[0] = selector;
+        if (typeof selector.length === 'number') {
+            const arr = [];
+            for (let elm of selector) {
+                arr.push(elm);
+            }
+            sources = toNodeList(arr);
+        } else {
+            sources = toNodeList([selector]);
+        }
     }
-    document.body.addEventListener("mouseenter", function (e) {
-        sources.forEach((source, index) => {
-            if (e.target === source) {
-                isInImage = true;
-                if (currentResult instanceof Element || currentResult instanceof HTMLDocument) {
-                    currentResult.remove();
+    sources.forEach((source) => {
+        if (typeof allSources.find(x => x.source === source) === 'object') {
+            for (let i = allSources.length - 1; i >= 0; i--) {
+                if (allSources[i].source === source) {
+                    allSources.splice(i, 1);
                 }
-                let result = document.createElement("DIV");
-                document.body.appendChild(result);
-                currentResult = result;
-                imageZoom(source, param, result);
             }
+        }
+        allSources.push({
+            param: param,
+            source: source,
         });
-    }, true);
-    document.body.addEventListener("mouseout", function (e) {
-        sources.forEach((source, index) => {
-            if (e.target === source) {
-                isInImage = false;
-                removeResultIfNotOnImage();
+    });
+}
+
+function registerEvents() {
+    document.body.addEventListener('mouseenter', (e) => {
+        const source = allSources.find(x => x.source === e.target);
+        if (typeof source !== 'undefined') {
+            isInImage = true;
+            currentSource = source;
+            if (currentResult instanceof Element || currentResult instanceof HTMLDocument) {
+                currentResult.remove();
             }
-        });
+            currentResult = document.createElement('DIV');
+            document.body.appendChild(currentResult);
+            positionResult();
+            imageZoom();
+        }
     }, true);
-    document.body.addEventListener("mouseenter", function (e) {
+    document.body.addEventListener('mouseout', (e) => {
+        const source = allSources.find(x => x.source === e.target);
+        if (typeof source !== 'undefined') {
+            isInImage = false;
+            removeResultIfNotOnImage();
+        }
+    }, true);
+    document.body.addEventListener('mouseenter', (e) => {
         if (e.target.id === lensSelectorId) {
             isInLens = true;
         }
     }, true);
-    document.body.addEventListener("mouseout", function (e) {
+    document.body.addEventListener('mouseout', (e) => {
         if (e.target.id === lensSelectorId) {
             isInLens = false;
             removeResultIfNotOnImage();
         }
     }, true);
+}
+
+const cursorZoom = function (selector, param) {
+    init(selector, param);
+    if (hasRegisterEvents === false) {
+        registerEvents();
+        hasRegisterEvents = true;
+    }
 };
 
 module.exports = cursorZoom;

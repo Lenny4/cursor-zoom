@@ -1,0 +1,11 @@
+#cursor-zoom-lens {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#cursor-zoom-result {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    z-index: 100000;
+}

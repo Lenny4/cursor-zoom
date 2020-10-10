@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
     <title>empty-js-client-package</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -14,25 +14,36 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-7">
+        <div class="col-4 offset-2">
+            <br><br><br><br><br><br><br><br>
             <div class="position-relative">
-                <img
-                     src="https://cdn.searchenginejournal.com/wp-content/uploads/2019/07/the-essential-guide-to-using-images-legally-online-1520x800.png"
-                     width="600" height="400" class="img-fluid">
+                <img id="image1" class="img-fluid cursor-zoom" height="400" width="600"
+                     src="https://cdn.searchenginejournal.com/wp-content/uploads/2019/07/the-essential-guide-to-using-images-legally-online-1520x800.png">
             </div>
         </div>
         <div class="col-7">
             <div class="position-relative">
-                <img
-                     src="https://cdn.searchenginejournal.com/wp-content/uploads/2019/07/the-essential-guide-to-using-images-legally-online-1520x800.png"
-                     width="600" height="400" class="img-fluid">
+                <img id="image2" class="img-fluid cursor-zoom-2" height="400" width="600"
+                     src="https://cdn.searchenginejournal.com/wp-content/uploads/2019/07/the-essential-guide-to-using-images-legally-online-1520x800.png">
             </div>
         </div>
     </div>
 </div>
 <script src="../dist/cursor-zoom.js"></script>
 <script>
-    cursorZoom('.img-fluid');
+    cursorZoom('.cursor-zoom', {// all parameters are optionals
+
+        // 'auto' will place the zooming image on the right or left, depending of the position of the image on the window
+        position: 'auto', // 'top', 'left', 'right', 'left', 'auto' | default: 'auto'
+
+        classResult: 'col-4', // class of the zooming image | default: 'cursor-zoom-result'
+
+        widthLens: 40, // width of the lens in % of the smallest width or height of the image | default 40
+
+        margin: 15, // margin between image and zooming image in px
+    });
+
+    cursorZoom('.cursor-zoom-2');
 </script>
 </body>
 </html>
