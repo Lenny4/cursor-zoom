@@ -1,6 +1,6 @@
 {
   "name": "cursor-zoom",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple module to zoom on picture with cursor",
   "main": "index.js",
   "repository": {

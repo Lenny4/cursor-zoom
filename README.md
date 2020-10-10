@@ -8,6 +8,18 @@ Most of the code comes from: [https://www.w3schools.com/howto/tryit.asp?filename
 ## Warning
 The `<img>` must be placed inside a container with relative positioning.
 
+If you display your `<img>` in `<picture>` you might have some display issues. To fix them add these lines to your css:
+```css
+picture {
+  position: relative;
+  display: inline-block;
+}
+
+picture img {
+  margin: auto;
+}
+```
+
 ## Installation
 ```bash
 $ npm install cursor-zoom
@@ -20,6 +32,7 @@ $ npm install cursor-zoom
 </div>
 ```
 ```javascript
+const cursorZoom = require('cursor-zoom');
 cursorZoom('.cursor-zoom', {// all parameters are optionals
 
         // 'auto' will place the zooming image on the right or left, depending of the position of the image on the window
