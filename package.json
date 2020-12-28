@@ -1,6 +1,6 @@
 {
   "name": "cursor-zoom",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Simple module to zoom on picture with cursor",
   "main": "index.js",
   "repository": {
@@ -20,7 +20,7 @@
     "zoomable"
   ],
   "scripts": {
-    "build": "mkdir -p dist && browserify -t browserify-css index.js -s cursorZoom -o dist/cursor-zoom.js"
+    "build": "mkdir -p dist && browserify index.js -s cursorZoom -o dist/cursor-zoom.js"
   },
   "devDependencies": {
     "browserify": "^16.5.2",

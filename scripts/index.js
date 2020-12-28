@@ -1,5 +1,4 @@
 'use strict';
-require('../style/style.css');
 
 const lensSelectorId = 'cursor-zoom-lens';
 const resultSelectorId = 'cursor-zoom-result';
